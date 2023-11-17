@@ -9,7 +9,7 @@ async def fetch_html(url, user_agent=None):
     async with aiohttp.ClientSession() as session:
         try:
             async with session.get(url, headers=headers) as response:
-                response.raise_for_status()  # добавляем для обработки ошибок
+                response.raise_for_status()
                 return await response.text()
         except aiohttp.ClientError as e:
             print(f"Error during HTTP request: {e}")
@@ -26,21 +26,24 @@ async def get_product_info(url):
         if soup:
             container = soup.find_all("div", class_="prd-main-wrapper")
             for obj in container:
+                # Taking product information
                 name = obj.find("h3", class_="seo-heading").text.strip()
                 author = obj.find(
                     "a", class_="who font-weight-bold"
-                ).text.strip()  # изменяем название переменной на author
+                ).text.strip()
                 price = obj.find("div", class_="prd-price").text.strip()
+
                 product_info = f"{name}\n{author}\n{price}\n\n"
-                print(product_info)  # выводим информацию о продукте
+
+                print(product_info)  # display product information
         else:
             print(
                 "Unable to find product list on the page"
-            )  # обрабатываем случай, когда контейнер продуктов не найден
+            )  # handle the case when the product container is not found
     else:
         print(
             "Failed to fetch HTML from the URL"
-        )  # обрабатываем случай, когда HTML не был получен
+        )  # handle the case when HTML was not received
 
 
 async def main():
